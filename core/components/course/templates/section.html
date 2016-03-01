@@ -1,6 +1,6 @@
 <ion-view>
     <ion-nav-title><mm-format-text watch="true">{{ title }}</mm-format-text></ion-nav-title>
-    <ion-content delegate-handle="mmSectionScroll">
+    <ion-content delegate-handle="mmSectionScroll" mm-state-class>
         <ion-refresher pulling-text="{{ 'mm.core.pulltorefresh' | translate }}" ng-if="sectionLoaded" on-refresh="doRefresh()">
         </ion-refresher>
         <mm-loading hide-until="sectionLoaded" loading-padding-top="loadingPaddingTop">
@@ -41,6 +41,7 @@
                     {{ 'mm.course.nocontentavailable' | translate }}
                 </div>
             </section>
+            <p class="padding" ng-if="!hasContent">{{ 'mm.course.nocontentavailable' | translate }}</p>
         </mm-loading>
     </ion-content>
 </ion-view>

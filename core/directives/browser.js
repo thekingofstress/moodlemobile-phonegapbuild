@@ -21,7 +21,8 @@ angular.module('mm.core')
  * @ngdoc directive
  * @name mmBrowser
  */
-.directive('mmBrowser', function($mmUtil) {
+.directive('mmBrowser', function($mmUtil, $mmContentLinksHelper) {
+
     return {
         restrict: 'A',
         priority: 100,
@@ -31,15 +32,20 @@ angular.module('mm.core')
                 if (href) {
                     event.preventDefault();
                     event.stopPropagation();
-                    if (href.indexOf('cdvfile://') === 0 || href.indexOf('file://') === 0) {
-                        // We have a local file.
-                        $mmUtil.openFile(href).catch(function(error) {
-                            $mmUtil.showErrorModal(error);
-                        });
-                    } else {
-                        // It's an external link, we will open with browser.
-                        $mmUtil.openInBrowser(href);
-                    }
+
+                    $mmContentLinksHelper.handleLink(href).then(function(treated) {
+                        if (!treated) {
+                           if (href.indexOf('cdvfile://') === 0 || href.indexOf('file://') === 0) {
+                                // We have a local file.
+                                $mmUtil.openFile(href).catch(function(error) {
+                                    $mmUtil.showErrorModal(error);
+                                });
+                            } else {
+                                // It's an external link, we will open with browser.
+                                $mmUtil.openInBrowser(href);
+                            }
+                        }
+                    });
                 }
             });
         }
